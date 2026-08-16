@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How it works — Confinity</title>
+<meta name="description" content="Everything you need to ask for help or post your gigs on Confinity.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0E14;
+    --bg-alt:#10141C;
+    --surface:#161B24;
+    --surface-2:#1B222E;
+    --border:#262C38;
+    --text:#E8E6E1;
+    --text-dim:#8B92A3;
+    --text-faint:#565E70;
+    --amber:#F2B84B;
+    --cyan:#55D6C2;
+    --pink:#E8618C;
+    --radius:14px;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+    --font-body:'Inter', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{ color:inherit; text-decoration:none; }
+  ul,dl{ list-style:none; }
+  img,svg{ display:block; max-width:100%; }
+  ::selection{ background:var(--amber); color:var(--bg); }
+  :focus-visible{ outline:2px solid var(--amber); outline-offset:3px; border-radius:4px; }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:0.12;
+    pointer-events:none;
+    z-index:0;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,14,20,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px; max-width:1180px; margin:0 auto;
+  }
+  .logo{ display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:700; font-size:1.15rem; letter-spacing:-0.01em; }
+  .logo .mark{ width:26px; height:16px; }
+  .logo .mark path{ fill:none; stroke-linecap:round; }
+  .nav-links{ display:flex; gap:32px; font-size:0.92rem; color:var(--text-dim); }
+  .nav-links a{ transition:color .15s ease; }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-links a.current{ color:var(--amber); }
+  .nav-cta{ display:flex; align-items:center; gap:18px; }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:10px 20px; border-radius:8px;
+    font-family:var(--font-body); font-weight:600; font-size:0.92rem;
+    cursor:pointer; border:1px solid transparent;
+    transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{ background:var(--amber); color:#1A1200; }
+  .btn-primary:hover{ transform:translateY(-1px); background:#f5c363; }
+  .btn-ghost{ color:var(--text); border-color:var(--border); }
+  .btn-ghost:hover{ border-color:var(--text-faint); }
+  .btn-sm{ padding:8px 16px; font-size:0.85rem; }
+
+  @media (max-width:820px){ .nav-links{ display:none; } }
+
+  main{ position:relative; z-index:1; }
+  .wrap{ max-width:1100px; margin:0 auto; padding:0 32px; }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--font-mono); font-size:0.78rem; color:var(--cyan);
+    background:rgba(85,214,194,0.08); border:1px solid rgba(85,214,194,0.25);
+    padding:6px 12px; border-radius:20px; margin-bottom:20px;
+  }
+  .eyebrow::before{ content:"●"; font-size:0.6rem; color:var(--cyan); }
+
+  /* ---------- HERO ---------- */
+  .hw-hero{
+    position:relative;
+    padding:88px 32px 40px;
+    max-width:900px;
+    margin:0 auto;
+    text-align:center;
+    overflow:visible;
+  }
+  .hw-hero h1{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(2.1rem, 4.6vw, 3.1rem);
+    line-height:1.08;
+    letter-spacing:-0.02em;
+    margin-bottom:18px;
+  }
+  .hw-hero h1 .accent{ color:var(--amber); }
+  .hw-hero h1 .accent2{ color:var(--cyan); }
+  .hw-hero p{
+    color:var(--text-dim);
+    font-size:1.05rem;
+    max-width:52ch;
+    margin:0 auto;
+  }
+
+  /* floating glyphs */
+  .glyphs{
+    position:absolute; inset:-20px -60px auto -60px;
+    height:340px;
+    pointer-events:none;
+    z-index:-1;
+  }
+  .glyph{
+    position:absolute;
+    font-family:var(--font-mono);
+    font-size:1.1rem;
+    color:var(--text-faint);
+    opacity:0.35;
+    animation:drift 9s ease-in-out infinite;
+  }
+  .glyph.c1{ top:10%; left:4%; color:var(--cyan); animation-delay:0s; }
+  .glyph.c2{ top:60%; left:10%; animation-delay:1.2s; font-size:1.4rem; }
+  .glyph.c3{ top:20%; right:6%; color:var(--amber); animation-delay:.6s; }
+  .glyph.c4{ top:65%; right:12%; animation-delay:2s; font-size:1.6rem; }
+  .glyph.c5{ top:0%; left:44%; color:var(--pink); animation-delay:1.6s; font-size:0.95rem; }
+  @keyframes drift{
+    0%,100%{ transform:translateY(0px); opacity:0.3; }
+    50%{ transform:translateY(-14px); opacity:0.6; }
+  }
+
+  /* ---------- PATH SELECTOR ---------- */
+  .path-select{
+    max-width:900px;
+    margin:36px auto 0;
+    padding:0 32px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  .path-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:28px 26px;
+    text-align:left;
+    cursor:pointer;
+    transition:border-color .2s ease, transform .2s ease, background .2s ease;
+    position:relative;
+  }
+  .path-card:hover{ transform:translateY(-3px); border-color:var(--text-faint); }
+  .path-card.active{
+    border-color:var(--amber);
+    background:linear-gradient(180deg, rgba(242,184,75,0.07), rgba(242,184,75,0.01));
+  }
+  .path-card.active.talent{
+    border-color:var(--cyan);
+    background:linear-gradient(180deg, rgba(85,214,194,0.07), rgba(85,214,194,0.01));
+  }
+  .path-icon{
+    width:42px; height:42px;
+    border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:16px;
+    background:var(--bg-alt);
+    border:1px solid var(--border);
+  }
+  .path-icon svg{ width:20px; height:20px; }
+  .path-card h3{
+    font-family:var(--font-display);
+    font-size:1.15rem;
+    margin-bottom:8px;
+  }
+  .path-card p{ color:var(--text-dim); font-size:0.9rem; }
+  .path-check{
+    position:absolute; top:22px; right:22px;
+    width:20px; height:20px;
+    border-radius:50%;
+    border:1.5px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    transition:all .2s ease;
+  }
+  .path-card.active .path-check{ border-color:var(--amber); background:var(--amber); }
+  .path-card.active.talent .path-check{ border-color:var(--cyan); background:var(--cyan); }
+  .path-check svg{ width:11px; height:11px; opacity:0; transition:opacity .15s ease; }
+  .path-card.active .path-check svg{ opacity:1; }
+
+  @media (max-width:680px){ .path-select{ grid-template-columns:1fr; } }
+
+  /* ---------- REVEAL ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(22px);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- PANEL SWITCH ---------- */
+  .panels{ margin-top:64px; }
+  .panel{ display:none; }
+  .panel.active{ display:block; animation:fadeIn .4s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  /* ---------- SECTION HEAD (in-panel) ---------- */
+  .section{ padding:0 32px 90px; }
+  .section-head{ max-width:640px; margin:0 auto 44px; text-align:center; }
+  .section-head h2{
+    font-family:var(--font-display); font-weight:700;
+    font-size:clamp(1.5rem, 2.8vw, 2rem);
+    letter-spacing:-0.01em; margin-bottom:12px;
+  }
+  .section-head p{ color:var(--text-dim); font-size:1rem; }
+
+  /* ---------- STEP TIMELINE ---------- */
+  .timeline{
+    max-width:760px;
+    margin:0 auto 70px;
+    position:relative;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:23px; top:8px; bottom:8px;
+    width:2px;
+    background:linear-gradient(var(--border), var(--border));
+  }
+  .tl-item{
+    display:grid;
+    grid-template-columns:48px 1fr;
+    gap:22px;
+    margin-bottom:36px;
+    position:relative;
+  }
+  .tl-item:last-child{ margin-bottom:0; }
+  .tl-dot{
+    width:48px; height:48px;
+    border-radius:50%;
+    background:var(--surface);
+    border:1.5px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono);
+    font-size:0.85rem;
+    color:var(--text-dim);
+    z-index:1;
+    transition:border-color .3s ease, color .3s ease;
+  }
+  .tl-item.in .tl-dot{ border-color:var(--amber); color:var(--amber); }
+  .panel.talent .tl-item.in .tl-dot{ border-color:var(--cyan); color:var(--cyan); }
+  .tl-content h4{
+    font-family:var(--font-display);
+    font-size:1.08rem;
+    margin-bottom:8px;
+    padding-top:10px;
+  }
+  .tl-content p{ color:var(--text-dim); font-size:0.92rem; max-width:56ch; }
+
+  /* ---------- TWO-COL: FORM GUIDE + PREVIEW ---------- */
+  .guide-grid{
+    max-width:1000px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    align-items:start;
+  }
+  @media (max-width:860px){ .guide-grid{ grid-template-columns:1fr; } }
+
+  .checklist-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:28px;
+  }
+  .checklist-card h3{
+    font-family:var(--font-display);
+    font-size:1.1rem;
+    margin-bottom:6px;
+  }
+  .checklist-card .sub{
+    color:var(--text-faint);
+    font-size:0.82rem;
+    font-family:var(--font-mono);
+    margin-bottom:22px;
+    display:block;
+  }
+  .check-item{
+    display:flex;
+    gap:12px;
+    padding:12px 0;
+    border-top:1px dashed var(--border);
+  }
+  .check-item:first-of-type{ border-top:none; padding-top:0; }
+  .check-mark{
+    width:18px; height:18px;
+    border-radius:5px;
+    border:1.5px solid var(--amber);
+    flex-shrink:0;
+    margin-top:2px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .panel.talent .check-mark{ border-color:var(--cyan); }
+  .check-mark svg{ width:10px; height:10px; }
+  .check-item h5{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:0.92rem;
+    margin-bottom:3px;
+  }
+  .check-item span{ color:var(--text-dim); font-size:0.85rem; }
+
+  /* preview mockup card */
+  .preview-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:0;
+    overflow:hidden;
+  }
+  .preview-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 18px;
+    background:var(--surface-2);
+    border-bottom:1px solid var(--border);
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    color:var(--text-faint);
+  }
+  .preview-bar .dot{ width:8px; height:8px; border-radius:50%; }
+  .preview-bar .dot.r{ background:#e8618c; }
+  .preview-bar .dot.y{ background:#F2B84B; }
+  .preview-bar .dot.g{ background:#55D6C2; }
+  .preview-body{ padding:22px; }
+  .post-card-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+  .post-tag{
+    font-family:var(--font-mono); font-size:0.72rem; color:var(--cyan);
+    background:rgba(85,214,194,0.08); border:1px solid rgba(85,214,194,0.2);
+    padding:4px 10px; border-radius:14px;
+  }
+  .panel.talent .post-tag{ color:var(--amber); background:rgba(242,184,75,0.08); border-color:rgba(242,184,75,0.2); }
+  .post-budget{ font-family:var(--font-mono); font-size:0.82rem; color:var(--amber); }
+  .preview-body h4{ font-family:var(--font-display); font-size:1.02rem; margin-bottom:8px; }
+  .preview-body p{ color:var(--text-dim); font-size:0.88rem; margin-bottom:14px; }
+  .preview-body .skills{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .preview-body .skill-chip{
+    font-family:var(--font-mono); font-size:0.72rem; color:var(--text-dim);
+    border:1px solid var(--border); padding:3px 10px; border-radius:12px;
+  }
+  .preview-foot{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--font-mono); font-size:0.75rem; color:var(--text-faint);
+    border-top:1px dashed var(--border); padding-top:12px;
+  }
+  .preview-label{
+    text-align:center;
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    color:var(--text-faint);
+    margin-top:14px;
+  }
+
+  /* ---------- TIPS ---------- */
+  .tips-band{
+    background:var(--bg-alt);
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    padding:80px 32px;
+  }
+  .tips-grid{
+    max-width:1000px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+  }
+  @media (max-width:820px){ .tips-grid{ grid-template-columns:1fr; } }
+  .tip-card{
+    padding:22px 4px;
+  }
+  .tip-num{
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    color:var(--text-faint);
+    display:block;
+    margin-bottom:10px;
+  }
+  .tip-card h4{
+    font-family:var(--font-display);
+    font-size:1.02rem;
+    margin-bottom:8px;
+  }
+  .tip-card p{ color:var(--text-dim); font-size:0.88rem; }
+
+  /* ---------- CTA BAND ---------- */
+  .cta-band{
+    max-width:760px;
+    margin:0 auto;
+    padding:90px 32px;
+    text-align:center;
+  }
+  .cta-band h2{
+    font-family:var(--font-display);
+    font-size:clamp(1.5rem, 3vw, 2.1rem);
+    margin-bottom:14px;
+  }
+  .cta-band p{ color:var(--text-dim); margin-bottom:30px; }
+  .cta-buttons{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ border-top:1px solid var(--border); padding:40px 32px 28px; position:relative; z-index:1; }
+  .footer-inner{
+    max-width:1180px; margin:0 auto;
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:14px;
+  }
+  .footer-links-inline{ display:flex; gap:26px; font-size:0.88rem; color:var(--text-dim); }
+  .footer-links-inline a:hover{ color:var(--text); }
+  .footer-copy{ font-family:var(--font-mono); font-size:0.78rem; color:var(--text-faint); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="index.html" class="logo">
+      <svg class="mark" viewBox="0 0 40 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10,12 C10,4 18,4 20,12 C22,20 30,20 30,12 C30,4 22,4 20,12 C18,20 10,20 10,12 Z"
+              stroke="url(#navGrad)" stroke-width="3.4"/>
+        <defs>
+          <linearGradient id="navGrad" x1="0" y1="0" x2="40" y2="0">
+            <stop offset="0" stop-color="#55D6C2"/>
+            <stop offset="1" stop-color="#F2B84B"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      Confinity
+    </a>
+    <ul class="nav-links">
+      <li><a href="work.html" class="current">How it works</a></li>
+      <li><a href="index.html#feed">Open work</a></li>
+      <li><a href="index.html#why-free">Why it's free</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="post.html" class="btn btn-primary btn-sm">Post a project</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ================= HERO ================= -->
+  <section class="hw-hero">
+    <div class="glyphs" aria-hidden="true">
+      <span class="glyph c1">&lt;/&gt;</span>
+      <span class="glyph c2">{ }</span>
+      <span class="glyph c3">?</span>
+      <span class="glyph c4">$_</span>
+      <span class="glyph c5">01</span>
+    </div>
+    <span class="eyebrow">the complete guide</span>
+    <h1>How <span class="accent">Confinity</span> actually works.</h1>
+    <p>Pick a side of the loop. Ask for something to get built, or offer your skills to build it — here's exactly what to do and what to write.</p>
+  </section>
+
+  <!-- ================= PATH SELECT ================= -->
+  <div class="path-select">
+    <button class="path-card active" id="cardClient" data-panel="panel-client" aria-pressed="true">
+      <div class="path-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 17.5v.01M12 14c0-2.5 2.5-2 2.5-4.5C14.5 7.5 12.5 6 10.5 6.5 9 7 8 8 8 9.5" stroke="#F2B84B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3>Ask for help</h3>
+      <p>You need something built, fixed, or figured out — and you want a real developer on it.</p>
+      <div class="path-check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#1A1200" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </button>
+
+    <button class="path-card talent" id="cardTalent" data-panel="panel-talent" aria-pressed="false">
+      <div class="path-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 6l-4 12" stroke="#55D6C2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3>Post your gigs</h3>
+      <p>You can build things — and you're free to take on new work right now.</p>
+      <div class="path-check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#0B0E14" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </button>
+  </div>
+
+  <!-- ================= PANELS ================= -->
+  <div class="panels">
+
+    <!-- ---- CLIENT PANEL ---- -->
+    <div class="panel active" id="panel-client">
+
+      <section class="section" style="padding-top:64px;">
+        <div class="section-head reveal">
+          <h2>Asking for help, step by step</h2>
+          <p>From idea to an inbox full of real replies.</p>
+        </div>
+
+        <div class="timeline">
+          <div class="tl-item reveal">
+            <div class="tl-dot">01</div>
+            <div class="tl-content">
+              <h4>Open "Post a project"</h4>
+              <p>Head to the post page from the button in the nav. No account wall first — write your project, then attach your email so replies reach you.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-dot">02</div>
+            <div class="tl-content">
+              <h4>Describe it like you'd explain it to a friend</h4>
+              <p>Skip the jargon you think you're supposed to use. Say what's broken, what you want built, or what outcome you're after.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-dot">03</div>
+            <div class="tl-content">
+              <h4>Give a real budget and timeline</h4>
+              <p>A range is fine. "Open to offers" works too — but a number gets you faster, more serious replies than leaving it blank.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-dot">04</div>
+            <div class="tl-content">
+              <h4>Reply to who fits, ignore who doesn't</h4>
+              <p>Developers message you directly. Pick based on their portfolio and how well they understood the brief — not just the lowest price.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head reveal">
+          <h2>What to put in your post</h2>
+          <p>The fields that make a post easy to say yes to.</p>
+        </div>
+
+        <div class="guide-grid">
+          <div class="checklist-card reveal">
+            <h3>Post checklist</h3>
+            <span class="sub">for the "ask for help" form</span>
+
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#F2B84B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Title</h5><span>One line, specific. "Fix mobile checkout bug" beats "Need a developer."</span></div>
+            </div>
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#F2B84B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Category</h5><span>Frontend, backend, mobile, design, data, DevOps — helps the right people find it.</span></div>
+            </div>
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#F2B84B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Budget</h5><span>A flat fee, an hourly rate, or a range. "Open" is okay, "$0" isn't.</span></div>
+            </div>
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#F2B84B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Timeline</h5><span>This week, this month, no rush — sets expectations before anyone replies.</span></div>
+            </div>
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#F2B84B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Description</h5><span>What exists today, what you want instead, and any links, files, or examples.</span></div>
+            </div>
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#F2B84B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Contact email</h5><span>Where replies land. Nothing gets posted publicly on your behalf.</span></div>
+            </div>
+          </div>
+
+          <div class="reveal">
+            <div class="preview-card">
+              <div class="preview-bar">
+                <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+                <span>preview.post</span>
+              </div>
+              <div class="preview-body">
+                <div class="post-card-top">
+                  <span class="post-tag">frontend</span>
+                  <span class="post-budget">$300–500</span>
+                </div>
+                <h4>Rebuild a landing page in React + Tailwind</h4>
+                <p>Have a Figma file, need it turned into a responsive, fast-loading page. Bonus if you know basic SEO.</p>
+                <div class="preview-foot"><span>timeline: 1–2 weeks</span><span>you@example.com</span></div>
+              </div>
+            </div>
+            <p class="preview-label">what a well-written post looks like</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ---- TALENT PANEL ---- -->
+    <div class="panel talent" id="panel-talent">
+
+      <section class="section" style="padding-top:64px;">
+        <div class="section-head reveal">
+          <h2>Posting your gig, step by step</h2>
+          <p>From "I'm free right now" to your first message.</p>
+        </div>
+
+        <div class="timeline">
+          <div class="tl-item reveal">
+            <div class="tl-dot">01</div>
+            <div class="tl-content">
+              <h4>Open "Post a project" and pick "I build things"</h4>
+              <p>Same page, different form. It takes your skills and availability instead of a project brief.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-dot">02</div>
+            <div class="tl-content">
+              <h4>List what you're actually good at</h4>
+              <p>Name the languages, frameworks, and kinds of work you take on — not a generic "full-stack developer" line.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-dot">03</div>
+            <div class="tl-content">
+              <h4>Link proof, not promises</h4>
+              <p>Your GitHub, a live site, a case study — one good link does more than three paragraphs of self-description.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-dot">04</div>
+            <div class="tl-content">
+              <h4>Say when you're free and go</h4>
+              <p>Clients browsing the open work board see your gig and message you directly. No bidding, no fees taken.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head reveal">
+          <h2>What to put in your gig</h2>
+          <p>The fields that make a client trust you enough to reach out.</p>
+        </div>
+
+        <div class="guide-grid">
+          <div class="checklist-card reveal">
+            <h3>Gig checklist</h3>
+            <span class="sub">for the "post your gigs" form</span>
+
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#55D6C2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Role / title</h5><span>What you do in one line — "iOS developer," not "tech enthusiast."</span></div>
+            </div>
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#55D6C2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Skills & tools</h5><span>The specific languages and frameworks — this is what people filter by.</span></div>
+            </div>
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#55D6C2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Portfolio or GitHub link</h5><span>One working link beats a long bio. Make sure it's public.</span></div>
+            </div>
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#55D6C2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Availability</h5><span>Hours per week, or "free until [date]" — sets the pace early.</span></div>
+            </div>
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#55D6C2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Rate</h5><span>Hourly, flat, or "depends on scope" — clients skip gigs that hide this entirely.</span></div>
+            </div>
+            <div class="check-item">
+              <div class="check-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#55D6C2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div><h5>Contact email</h5><span>Where a client's message lands first.</span></div>
+            </div>
+          </div>
+
+          <div class="reveal">
+            <div class="preview-card">
+              <div class="preview-bar">
+                <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+                <span>preview.gig</span>
+              </div>
+              <div class="preview-body">
+                <div class="post-card-top">
+                  <span class="post-tag">iOS · SwiftUI</span>
+                  <span class="post-budget">$40/hr</span>
+                </div>
+                <h4>iOS developer, free for new projects this month</h4>
+                <p>Built 6 shipped SwiftUI apps solo. Comfortable taking a rough idea to App Store-ready.</p>
+                <div class="skills">
+                  <span class="skill-chip">swift</span>
+                  <span class="skill-chip">swiftui</span>
+                  <span class="skill-chip">firebase</span>
+                </div>
+                <div class="preview-foot"><span>15–20 hrs/week</span><span>you@example.com</span></div>
+              </div>
+            </div>
+            <p class="preview-label">what a well-written gig looks like</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <!-- ================= TIPS ================= -->
+  <div class="tips-band">
+    <div class="section-head reveal" style="margin-bottom:56px;">
+      <span class="eyebrow">before you post</span>
+      <h2>What actually gets replies</h2>
+      <p>Small, unglamorous habits that make a real difference on a young board.</p>
+    </div>
+    <div class="tips-grid">
+      <div class="tip-card reveal">
+        <span class="tip-num">01</span>
+        <h4>Be specific, not impressive</h4>
+        <p>"Fix the Safari cart bug" gets three good replies. "Seeking rockstar ninja developer" gets none.</p>
+      </div>
+      <div class="tip-card reveal">
+        <span class="tip-num">02</span>
+        <h4>Answer before you're asked</h4>
+        <p>Budget, timeline, and scope up front save both sides a round of back-and-forth messages.</p>
+      </div>
+      <div class="tip-card reveal">
+        <span class="tip-num">03</span>
+        <h4>Reply, even to say no</h4>
+        <p>It's a small board right now — a short "not a fit, thanks" goes a long way toward people posting again.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CTA ================= -->
+  <div class="cta-band">
+    <h2 class="reveal">Ready to close the loop?</h2>
+    <p class="reveal">Post your project or your gig — it takes about a minute either way.</p>
+    <div class="cta-buttons reveal">
+      <a href="post.html" class="btn btn-primary">Post a project →</a>
+      <a href="index.html#feed" class="btn btn-ghost">See open work</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Confinity. Built in the open.</span>
+    <div class="footer-links-inline">
+      <a href="index.html">Home</a>
+      <a href="work.html">How it works</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // path selector -> panel switch
+  const cardClient = document.getElementById('cardClient');
+  const cardTalent = document.getElementById('cardTalent');
+  const panelClient = document.getElementById('panel-client');
+  const panelTalent = document.getElementById('panel-talent');
+
+  function selectPath(which){
+    const isClient = which === 'client';
+    cardClient.classList.toggle('active', isClient);
+    cardTalent.classList.toggle('active', !isClient);
+    cardClient.setAttribute('aria-pressed', isClient);
+    cardTalent.setAttribute('aria-pressed', !isClient);
+    panelClient.classList.toggle('active', isClient);
+    panelTalent.classList.toggle('active', !isClient);
+    // re-trigger reveal animations for the newly shown panel
+    const activePanel = isClient ? panelClient : panelTalent;
+    activePanel.querySelectorAll('.reveal').forEach(el=>{
+      el.classList.remove('in');
+      observer.observe(el);
+    });
+  }
+  cardClient.addEventListener('click', ()=>selectPath('client'));
+  cardTalent.addEventListener('click', ()=>selectPath('talent'));
+
+  // scroll reveal
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold:0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+  // also reveal timeline dots progressively
+  const tlObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+      }
+    });
+  }, { threshold:0.4 });
+  document.querySelectorAll('.tl-item').forEach(el=>tlObserver.observe(el));
+</script>
+
+</body>
+</html>
