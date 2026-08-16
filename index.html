@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confinity — Where questions meet code</title>
+<meta name="description" content="Confinity connects people who need something built with remote developers who can build it. Free, for now.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0E14;
+    --bg-alt:#10141C;
+    --surface:#161B24;
+    --surface-2:#1B222E;
+    --border:#262C38;
+    --text:#E8E6E1;
+    --text-dim:#8B92A3;
+    --text-faint:#565E70;
+    --amber:#F2B84B;
+    --amber-dim:#8A6C2E;
+    --cyan:#55D6C2;
+    --pink:#E8618C;
+    --radius:14px;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+    --font-body:'Inter', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  img,svg{ display:block; max-width:100%; }
+
+  ::selection{ background:var(--amber); color:var(--bg); }
+
+  :focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:3px;
+    border-radius:4px;
+  }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* subtle grid + noise backdrop */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:0.12;
+    pointer-events:none;
+    z-index:0;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(11,14,20,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 32px;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.15rem;
+    letter-spacing:-0.01em;
+  }
+  .logo .mark{ width:26px; height:16px; }
+  .logo .mark path{ fill:none; stroke-linecap:round; }
+  .nav-links{
+    display:flex;
+    gap:32px;
+    font-size:0.92rem;
+    color:var(--text-dim);
+  }
+  .nav-links a{ transition:color .15s ease; }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-cta{ display:flex; align-items:center; gap:18px; }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 20px;
+    border-radius:8px;
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:0.92rem;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:var(--amber);
+    color:#1A1200;
+  }
+  .btn-primary:hover{ transform:translateY(-1px); background:#f5c363; }
+  .btn-ghost{
+    color:var(--text);
+    border-color:var(--border);
+  }
+  .btn-ghost:hover{ border-color:var(--text-faint); }
+  .btn-sm{ padding:8px 16px; font-size:0.85rem; }
+
+  @media (max-width:820px){
+    .nav-links{ display:none; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    z-index:1;
+    padding:96px 32px 60px;
+    max-width:1180px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:40px;
+    align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color:var(--cyan);
+    background:rgba(85,214,194,0.08);
+    border:1px solid rgba(85,214,194,0.25);
+    padding:6px 12px;
+    border-radius:20px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{ content:"●"; font-size:0.6rem; color:var(--cyan); }
+
+  h1{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(2.4rem, 4.6vw, 3.6rem);
+    line-height:1.06;
+    letter-spacing:-0.02em;
+    margin-bottom:22px;
+  }
+  h1 .accent{ color:var(--amber); }
+  h1 .accent2{ color:var(--cyan); }
+
+  .hero p.lead{
+    font-size:1.08rem;
+    color:var(--text-dim);
+    max-width:46ch;
+    margin-bottom:32px;
+  }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:28px; }
+
+  .hero-meta{
+    display:flex;
+    gap:26px;
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color:var(--text-faint);
+    flex-wrap:wrap;
+  }
+  .hero-meta span{ color:var(--text-dim); }
+
+  /* Infinity visual */
+  .infinity-stage{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:340px;
+  }
+  .infinity-stage svg{ width:100%; height:auto; max-width:560px; }
+
+  .glow-l, .glow-r{
+    position:absolute;
+    width:220px; height:220px;
+    border-radius:50%;
+    filter:blur(70px);
+    opacity:0.35;
+    z-index:-1;
+  }
+  .glow-l{ background:var(--cyan); left:6%; top:20%; }
+  .glow-r{ background:var(--amber); right:4%; top:30%; }
+
+  .code-text{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+  }
+  .tok-tag{ fill:#e07db0; }
+  .tok-kw{ fill:var(--cyan); }
+  .tok-str{ fill:#c9d97a; }
+  .tok-punc{ fill:var(--text-faint); }
+  .tok-text{ fill:var(--text); }
+  .tok-comment{ fill:var(--text-faint); font-style:italic; }
+
+  .qmark{
+    font-family:var(--font-display);
+    font-weight:700;
+    fill:var(--amber);
+  }
+
+  @keyframes pulseQ{
+    0%,100%{ opacity:1; }
+    50%{ opacity:0.55; }
+  }
+  .qmark{ animation:pulseQ 2.6s ease-in-out infinite; }
+
+  @keyframes blinkCursor{
+    0%,49%{ opacity:1; }
+    50%,100%{ opacity:0; }
+  }
+  .cursor{ animation:blinkCursor 1s step-end infinite; }
+
+  @media (max-width:900px){
+    .hero{ grid-template-columns:1fr; padding-top:60px; }
+    .infinity-stage{ order:-1; min-height:260px; }
+  }
+
+  /* ---------- MARQUEE ---------- */
+  .marquee-section{
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    background:var(--bg-alt);
+    padding:16px 0;
+    overflow:hidden;
+    position:relative;
+    z-index:1;
+  }
+  .marquee-track{
+    display:flex;
+    gap:14px;
+    width:max-content;
+    animation:scrollLeft 32s linear infinite;
+  }
+  .marquee-section:hover .marquee-track{ animation-play-state:paused; }
+  @keyframes scrollLeft{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+  .tag-chip{
+    font-family:var(--font-mono);
+    font-size:0.82rem;
+    color:var(--text-dim);
+    border:1px solid var(--border);
+    padding:7px 16px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .tag-chip .hash{ color:var(--amber); margin-right:4px;}
+
+  /* ---------- SECTIONS GENERIC ---------- */
+  section{ position:relative; z-index:1; }
+  .section{ padding:96px 32px; }
+  .section-head{
+    max-width:640px;
+    margin:0 auto 56px;
+    text-align:center;
+  }
+  .section-head .eyebrow{ margin-bottom:16px; }
+  .section-head h2{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(1.7rem, 3vw, 2.3rem);
+    letter-spacing:-0.01em;
+    margin-bottom:14px;
+  }
+  .section-head p{ color:var(--text-dim); font-size:1.02rem; }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how-toggle{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:48px;
+  }
+  .toggle-btn{
+    font-family:var(--font-mono);
+    font-size:0.85rem;
+    padding:9px 18px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    cursor:pointer;
+    background:transparent;
+    transition:all .15s ease;
+  }
+  .toggle-btn.active{
+    color:var(--bg);
+    background:var(--amber);
+    border-color:var(--amber);
+  }
+
+  .steps{
+    max-width:900px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  .steps.hidden{ display:none; }
+  .step-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:26px 22px;
+  }
+  .step-num{
+    font-family:var(--font-mono);
+    color:var(--amber);
+    font-size:0.78rem;
+    margin-bottom:14px;
+    display:block;
+  }
+  .step-card h3{
+    font-family:var(--font-display);
+    font-size:1.05rem;
+    margin-bottom:10px;
+  }
+  .step-card p{ color:var(--text-dim); font-size:0.92rem; }
+
+  @media (max-width:780px){
+    .steps{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- FEED ---------- */
+  .feed-grid{
+    max-width:1000px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+  }
+  .post-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .post-card:hover{ border-color:var(--text-faint); transform:translateY(-2px); }
+  .post-card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:12px;
+  }
+  .post-tag{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    color:var(--cyan);
+    background:rgba(85,214,194,0.08);
+    border:1px solid rgba(85,214,194,0.2);
+    padding:4px 10px;
+    border-radius:14px;
+  }
+  .post-budget{
+    font-family:var(--font-mono);
+    font-size:0.82rem;
+    color:var(--amber);
+  }
+  .post-card h4{
+    font-family:var(--font-display);
+    font-size:1.02rem;
+    margin-bottom:8px;
+  }
+  .post-card p{ color:var(--text-dim); font-size:0.88rem; margin-bottom:14px; }
+  .post-card-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    color:var(--text-faint);
+    border-top:1px dashed var(--border);
+    padding-top:12px;
+  }
+
+  @media (max-width:780px){
+    .feed-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- WHY FREE ---------- */
+  .honest-panel{
+    max-width:820px;
+    margin:0 auto;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:44px;
+    position:relative;
+    overflow:hidden;
+  }
+  .honest-panel::before{
+    content:"";
+    position:absolute;
+    top:-40%; right:-20%;
+    width:300px; height:300px;
+    background:var(--amber);
+    opacity:0.06;
+    border-radius:50%;
+    filter:blur(60px);
+  }
+  .honest-panel .term-line{
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    color:var(--text-faint);
+    margin-bottom:20px;
+  }
+  .honest-panel .term-line .p1{ color:var(--cyan); }
+  .honest-panel h2{
+    font-family:var(--font-display);
+    font-size:1.6rem;
+    margin-bottom:16px;
+  }
+  .honest-panel p{ color:var(--text-dim); margin-bottom:14px; max-width:60ch; }
+  .honest-panel p:last-of-type{ margin-bottom:0; }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--border);
+    padding:48px 32px 32px;
+  }
+  .footer-inner{
+    max-width:1180px;
+    margin:0 auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:24px;
+  }
+  .footer-left .logo{ margin-bottom:10px; }
+  .footer-left p{ color:var(--text-faint); font-size:0.85rem; max-width:32ch; }
+  .footer-links{
+    display:flex;
+    gap:48px;
+    flex-wrap:wrap;
+  }
+  .footer-col h5{
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    color:var(--text-faint);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin-bottom:14px;
+  }
+  .footer-col ul li{ margin-bottom:9px; }
+  .footer-col ul li a{ color:var(--text-dim); font-size:0.88rem; }
+  .footer-col ul li a:hover{ color:var(--text); }
+  .footer-bottom{
+    max-width:1180px;
+    margin:40px auto 0;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    font-size:0.78rem;
+    color:var(--text-faint);
+    font-family:var(--font-mono);
+    flex-wrap:wrap;
+    gap:10px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#top" class="logo">
+      <svg class="mark" viewBox="0 0 40 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10,12 C10,4 18,4 20,12 C22,20 30,20 30,12 C30,4 22,4 20,12 C18,20 10,20 10,12 Z"
+              stroke="url(#navGrad)" stroke-width="3.4"/>
+        <defs>
+          <linearGradient id="navGrad" x1="0" y1="0" x2="40" y2="0">
+            <stop offset="0" stop-color="#55D6C2"/>
+            <stop offset="1" stop-color="#F2B84B"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      Confinity
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#feed">Open work</a></li>
+      <li><a href="#why-free">Why it's free</a></li>
+      <li><a href="post.html">Post a project</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="post.html" class="btn btn-primary btn-sm">Post a project</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">v0.1 &middot; open to everyone &middot; no fees yet</span>
+      <h1>Where a <span class="accent">question</span><br>meets its <span class="accent2">code</span>.</h1>
+      <p class="lead">Confinity is a small, honest place to post real work and get it built by remote developers — or find your next project without the noise of a giant marketplace.</p>
+      <div class="hero-ctas">
+        <a href="post.html" class="btn btn-primary">Post a project →</a>
+        <a href="#feed" class="btn btn-ghost">Browse open work</a>
+      </div>
+      <div class="hero-meta">
+        <span>$0</span> platform fees right now
+        <span>·</span>
+        <span>100%</span> new, still small
+        <span>·</span>
+        built in the open
+      </div>
+    </div>
+
+    <div class="infinity-stage" aria-hidden="false" role="img" aria-label="Infinity symbol logo: one loop holds a blinking question mark, the other loop holds a lit line of HTML code, joined in one continuous circuit.">
+      <div class="glow-l"></div>
+      <div class="glow-r"></div>
+      <svg viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="infGrad" x1="0" y1="0" x2="640" y2="0">
+            <stop offset="0" stop-color="#55D6C2"/>
+            <stop offset="0.5" stop-color="#8fb98f"/>
+            <stop offset="1" stop-color="#F2B84B"/>
+          </linearGradient>
+          <clipPath id="clipLeft">
+            <circle cx="185" cy="170" r="108"/>
+          </clipPath>
+          <clipPath id="clipRight">
+            <circle cx="455" cy="170" r="108"/>
+          </clipPath>
+        </defs>
+
+        <!-- infinity path -->
+        <path id="infPath" d="M185,170 C185,62 320,62 320,170 C320,278 455,278 455,170 C455,62 320,62 320,170 C320,278 185,278 185,170 Z"
+              fill="none" stroke="url(#infGrad)" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+
+        <!-- traveling spark -->
+        <circle r="5" fill="#F2B84B">
+          <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#infPath"/>
+          </animateMotion>
+        </circle>
+
+        <!-- left porthole: code -->
+        <circle cx="185" cy="170" r="108" fill="#10141C" stroke="#262C38" stroke-width="1.5"/>
+        <g clip-path="url(#clipLeft)" class="code-text">
+          <text x="92" y="128" class="tok-punc">1</text>
+          <text x="112" y="128"><tspan class="tok-punc">&lt;</tspan><tspan class="tok-tag">html</tspan><tspan class="tok-punc">&gt;</tspan></text>
+
+          <text x="92" y="148" class="tok-punc">2</text>
+          <text x="122" y="148"><tspan class="tok-punc">&lt;</tspan><tspan class="tok-tag">body</tspan><tspan class="tok-punc">&gt;</tspan></text>
+
+          <text x="92" y="168" class="tok-punc">3</text>
+          <text x="132" y="168"><tspan class="tok-punc">&lt;</tspan><tspan class="tok-tag">h1</tspan><tspan class="tok-punc">&gt;</tspan><tspan class="tok-str">Hello, world!</tspan><tspan class="tok-punc">&lt;/</tspan><tspan class="tok-tag">h1</tspan><tspan class="tok-punc">&gt;</tspan></text>
+
+          <text x="92" y="188" class="tok-punc">4</text>
+          <text x="122" y="188"><tspan class="tok-punc">&lt;/</tspan><tspan class="tok-tag">body</tspan><tspan class="tok-punc">&gt;</tspan></text>
+
+          <text x="92" y="208" class="tok-punc">5</text>
+          <text x="112" y="208"><tspan class="tok-punc">&lt;/</tspan><tspan class="tok-tag">html</tspan><tspan class="tok-punc">&gt;</tspan><tspan class="tok-text cursor">▍</tspan></text>
+        </g>
+
+        <!-- right porthole: question -->
+        <circle cx="455" cy="170" r="108" fill="#10141C" stroke="#262C38" stroke-width="1.5"/>
+        <g clip-path="url(#clipRight)">
+          <text x="455" y="215" text-anchor="middle" font-size="130" class="qmark">?</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= MARQUEE ================= -->
+  <div class="marquee-section">
+    <div class="marquee-track" id="marqueeTrack">
+      <!-- content injected/duplicated by JS for seamless loop; base set below -->
+      <span class="tag-chip"><span class="hash">#</span>react</span>
+      <span class="tag-chip"><span class="hash">#</span>python</span>
+      <span class="tag-chip"><span class="hash">#</span>figma-to-code</span>
+      <span class="tag-chip"><span class="hash">#</span>wordpress</span>
+      <span class="tag-chip"><span class="hash">#</span>api-integration</span>
+      <span class="tag-chip"><span class="hash">#</span>shopify</span>
+      <span class="tag-chip"><span class="hash">#</span>data-scraping</span>
+      <span class="tag-chip"><span class="hash">#</span>ios</span>
+      <span class="tag-chip"><span class="hash">#</span>devops</span>
+      <span class="tag-chip"><span class="hash">#</span>copywriting</span>
+      <span class="tag-chip"><span class="hash">#</span>sql</span>
+      <span class="tag-chip"><span class="hash">#</span>chrome-extension</span>
+    </div>
+  </div>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section class="section" id="how">
+    <div class="section-head">
+      <span class="eyebrow">how it works</span>
+      <h2>Two sides, one loop.</h2>
+      <p>No bidding wars, no algorithm to game. Post what you need, or show what you can build.</p>
+    </div>
+
+    <div class="how-toggle">
+      <button class="toggle-btn active" data-target="steps-client">I need something built</button>
+      <button class="toggle-btn" data-target="steps-talent">I build things</button>
+    </div>
+
+    <div class="steps" id="steps-client">
+      <div class="step-card">
+        <span class="step-num">01</span>
+        <h3>Post your project</h3>
+        <p>Describe what you need in plain language. Add a rough budget and timeline — no forms disguised as legal contracts.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">02</span>
+        <h3>Hear from real people</h3>
+        <p>Developers who are actually free right now respond directly. No inbox flooded with copy-pasted pitches.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">03</span>
+        <h3>Pick and ship</h3>
+        <p>Choose who fits, agree on terms between yourselves, and get to work. Confinity stays out of the way.</p>
+      </div>
+    </div>
+
+    <div class="steps hidden" id="steps-talent">
+      <div class="step-card">
+        <span class="step-num">01</span>
+        <h3>Set up in a minute</h3>
+        <p>List your skills, link your GitHub or portfolio. No lengthy vetting queue — this is a small, open board.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">02</span>
+        <h3>Browse open work</h3>
+        <p>See what people actually need right now, written by them, not run through a template generator.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">03</span>
+        <h3>Reach out, get hired</h3>
+        <p>Message the poster directly. Keep 100% of what you agree on — Confinity takes no cut while it's free.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEED ================= -->
+  <section class="section" id="feed" style="background:var(--bg-alt); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="section-head">
+      <span class="eyebrow">open work</span>
+      <h2>A few things posted this week</h2>
+      <p>A small, real sample of what people are looking to get built.</p>
+    </div>
+
+    <div class="feed-grid">
+      <div class="post-card">
+        <div class="post-card-top">
+          <span class="post-tag">frontend</span>
+          <span class="post-budget">$300–500</span>
+        </div>
+        <h4>Rebuild a landing page in React + Tailwind</h4>
+        <p>Have a Figma file, need it turned into a responsive, fast-loading page. Bonus if you know basic SEO.</p>
+        <div class="post-card-bottom"><span>posted 2d ago</span><span>3 replies</span></div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-card-top">
+          <span class="post-tag">backend</span>
+          <span class="post-budget">$150 flat</span>
+        </div>
+        <h4>Small Python script to clean up a CSV export</h4>
+        <p>~5,000 rows, needs de-duping and a couple of formatting fixes. Should take an afternoon.</p>
+        <div class="post-card-bottom"><span>posted 1d ago</span><span>7 replies</span></div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-card-top">
+          <span class="post-tag">shopify</span>
+          <span class="post-budget">$80/hr</span>
+        </div>
+        <h4>Fix checkout bug losing us orders</h4>
+        <p>Cart empties on mobile Safari after adding a discount code. Need someone who's debugged this before.</p>
+        <div class="post-card-bottom"><span>posted 6h ago</span><span>1 reply</span></div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-card-top">
+          <span class="post-tag">mobile</span>
+          <span class="post-budget">open</span>
+        </div>
+        <h4>iOS dev for a weekend habit-tracker app</h4>
+        <p>Solo founder, simple SwiftUI app, roughly 6 screens. Open to trading equity or a flat rate.</p>
+        <div class="post-card-bottom"><span>posted 4d ago</span><span>12 replies</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WHY FREE ================= -->
+  <section class="section" id="why-free">
+    <div class="honest-panel">
+      <div class="term-line"><span class="p1">$</span> cat why-its-free.txt</div>
+      <h2>Confinity is small, new, and free. On purpose, for now.</h2>
+      <p>This isn't a trick — there's no fee structure hiding behind a "coming soon." Confinity just started, so instead of charging people to use an unproven board, it stays free while it earns the right to charge anything at all.</p>
+      <p>That also means: no dispute resolution team, no payment escrow, no army of moderators yet. Agree on terms directly, use common sense, and treat this like the early, small community it is.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <a href="#top" class="logo">
+        <svg class="mark" viewBox="0 0 40 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10,12 C10,4 18,4 20,12 C22,20 30,20 30,12 C30,4 22,4 20,12 C18,20 10,20 10,12 Z"
+                stroke="url(#footGrad)" stroke-width="3.4"/>
+          <defs>
+            <linearGradient id="footGrad" x1="0" y1="0" x2="40" y2="0">
+              <stop offset="0" stop-color="#55D6C2"/>
+              <stop offset="1" stop-color="#F2B84B"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        Confinity
+      </a>
+      <p>Where a question meets its code. Free, small, and built in the open.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#feed">Open work</a></li>
+          <li><a href="post.html">Post a project</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#why-free">Why it's free</a></li>
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Confinity. Built in the open.</span>
+    <span>v0.1 — hosted on GitHub Pages</span>
+  </div>
+</footer>
+
+<script>
+  // duplicate marquee content once for a seamless loop
+  (function(){
+    const track = document.getElementById('marqueeTrack');
+    track.innerHTML += track.innerHTML;
+  })();
+
+  // how-it-works toggle
+  document.querySelectorAll('.toggle-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('steps-client').classList.add('hidden');
+      document.getElementById('steps-talent').classList.add('hidden');
+      document.getElementById(btn.dataset.target).classList.remove('hidden');
+    });
+  });
+
+</script>
+
+</body>
+</html>
